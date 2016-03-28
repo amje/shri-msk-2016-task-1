@@ -5,7 +5,7 @@ var sourcemaps = require('gulp-sourcemaps');
 var autoprefixer = require('gulp-autoprefixer');
 
 gulp.task('sass', function() {
-  return gulp.src('task-1/style/main.scss')
+  return gulp.src('src/style/main.scss')
       .pipe(sourcemaps.init())
       .pipe(sass({
         outputStyle: 'expanded'
@@ -15,5 +15,5 @@ gulp.task('sass', function() {
         cascade: false
       }))
       .pipe(sourcemaps.write())
-      .pipe(gulp.dest('task-1/'));
+      .pipe(gulp.dest('.'));
 });
