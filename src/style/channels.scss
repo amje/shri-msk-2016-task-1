@@ -1,0 +1,16 @@
+.channel-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    &__item {
+        flex-basis: 20rem;
+    }
+}
+
+.channel {
+
+}

@@ -1,0 +1,19 @@
+.weekday-picker {
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    &__item {
+        flex-basis: 120px;
+    }
+}
+
+.weekday {
+    text-align: center;
+
+    &__name {
+        font-size: 1.8em;
+    }
+}

@@ -17,3 +17,7 @@ gulp.task('sass', function() {
       .pipe(sourcemaps.write())
       .pipe(gulp.dest('.'));
 });
+
+gulp.task('watch', function() {
+    gulp.watch('src/style/*.scss', [sass]);
+});

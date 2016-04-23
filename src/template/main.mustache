@@ -1,0 +1,33 @@
+<ul class="weekday-picker">
+{{#weekdays}}
+    <li class="weekday-picker__item">
+        <div class="weekday">
+            <div class="weekday__name">{{name}}</div>
+            <div class="weekday__date">{{date}}</div>
+        </div>
+    </li>
+{{/weekdays}}
+</ul>
+<ul class="channel-list">
+{{#channels}}
+    <li class="channel-list__item">
+        <div class="channel" data-id="{{id}}">
+            <div class="channel__header">
+                <div class="channel__logo">
+                    <img src="{{{logo.url_template}}}" alt="" width="100">
+                </div>
+                <div class="channel__title">{{name}}</div>
+            </div>
+            <div class="channel__events">
+            {{#events}}
+                <div class="event{{#past}} event_past{{/past}}" data-id="{{id}}">
+                    <div class="event__time">{{start_at_time}}</div>
+                    <div class="event__title">{{name}}</div>
+                    <div class="event__subtitle">{{subtitle}}</div>
+                </div>
+            {{/events}}
+            </div>
+        </div>
+    </li>
+{{/channels}}
+</ul>
