@@ -1,5 +1,5 @@
 .channel-list {
-    margin: 5rem 0 0;
+    margin: 5rem 1rem 0;
     padding: 0;
     list-style: none;
     display: flex;
@@ -9,6 +9,10 @@
     &__item {
         flex: 18rem;
         margin-bottom: 2rem;
+    }
+
+    @media screen and (max-width: 400px) {
+        margin-top: 3rem;
     }
 }
 

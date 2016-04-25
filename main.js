@@ -91,49 +91,108 @@
 
         return result;
     }
-    function delegate(elements, event, className, callback) {
-        [].forEach.call(elements, function(el) {
-            el.addEventListener(event, function(e) {
-                var current = e.target;
-                while(current !== e.currentTarget) {
-                    if (current.classList.contains(className)) {
-                        callback.call(current,e.currentTarget, e);
-                    }
-                    current = current.parentNode;
-                }
-            })
-        });
-    }
     
 
     function init(result) {
         var data = parseData(result[0]);
-        var template = result[1];
+        var mainTemplate = result[1];
+        var popupTemplate = result[2];
         var appContainer = document.querySelector('.container');
 
-        appContainer.innerHTML = Mustache.render(template, data);
+        appContainer.innerHTML = Mustache.render(mainTemplate, data);
+        Mustache.parse(popupTemplate);
 
-        delegate(
-            document.querySelectorAll('.channel'),
-            'click',
-            'event',
-            getEventInfo
-        );
+        [].forEach.call(document.querySelectorAll('.event'), function(eventEl) {
+            eventEl.addEventListener('mouseenter', onEventMouseEnter);
+            eventEl.addEventListener('mouseleave', onEventMouseLeave);
+        });
 
-        function getEventInfo(channelEl) {
+        var beforeShowTimer;
+        var beforeRemoveTimer;
+        var eventPopupHash = {};
+        var openedEventPopup = null;
+
+        function showPopup() {
+            var tmp;
+            var popup;
+            var data = getEventInfo(this);
+
+            if (openedEventPopup) {
+                if (openedEventPopup.id === data.id) {
+                    return;
+                } else {
+                    openedEventPopup.style.display = 'none';
+                }
+            }
+            
+            if (eventPopupHash[data.id]) {
+                popup = eventPopupHash[data.id];
+            } else {
+                // Get random image
+                data.imageUrl = data.images[Math.floor(Math.random()*data.images.length)].url_template;
+                
+                tmp = document.createElement('div');
+                tmp.innerHTML = Mustache.render(popupTemplate, data);
+                popup = tmp.firstElementChild;
+                popup.addEventListener('mouseenter', onEventMouseEnter);
+                popup.addEventListener('mouseleave', onEventMouseLeave);
+                document.body.appendChild(popup);
+                this.setAttribute('aria-describedby', data.id);
+                eventPopupHash[data.id] = popup;
+            }
+
+            popup.style.display = 'block';
+            openedEventPopup = popup;
+
+            // Calculate dimension and position
+            var eventClientRect = this.getBoundingClientRect();
+            var popupLeft = eventClientRect.left + (eventClientRect.width / 2) - 160 + window.pageXOffset;
+            var popupTop = eventClientRect.top + eventClientRect.height + 5 + window.pageYOffset;
+
+            popup.style.left = popupLeft + 'px';
+            popup.style.top = popupTop + 'px';
+        }
+
+        function hidePopup() {
+            if (openedEventPopup) {
+                openedEventPopup.style.display = 'none';
+                openedEventPopup = null;
+            }
+        }
+
+        function onEventMouseEnter() {
+            if (this.classList.contains('popup')) {
+                clearTimeout(beforeShowTimer);
+                clearTimeout(beforeRemoveTimer);
+            } else {
+                beforeShowTimer = setTimeout(showPopup.bind(this), 1000);
+            }
+        }
+
+        function onEventMouseLeave() {
+            clearTimeout(beforeShowTimer);
+            clearTimeout(beforeRemoveTimer);
+            beforeRemoveTimer = setTimeout(hidePopup, 1000);
+        }
+
+        function getEventInfo(eventEl) {
+            var channelEl = eventEl;
+            while(!channelEl.classList.contains('channel')) {
+                channelEl = channelEl.parentNode;
+            }
             var channelData = data.channels.filter(function(channel) {
                 return channel.id === channelEl.dataset.id;
             })[0];
-            var eventData = channelData.events.filter(function(event) {
-                return event.id === this.dataset.id;
-            }, this)[0];
-            console.log(eventData);
+            return channelData.events.filter(function(event) {
+                return event.id === eventEl.dataset.id;
+            })[0];
         }
     }
 
     Promise.all([
         fetch('src/data/data.json').then(json),
-        fetch('src/template/main.mustache')
+        fetch('src/template/main.mustache'),
+        fetch('src/template/popup.mustache')
     ])
         .then(init)
         .catch(function onRejection(e) {
