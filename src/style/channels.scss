@@ -1,5 +1,5 @@
 .channel-list {
-    margin: 0;
+    margin: 5rem 0 0;
     padding: 0;
     list-style: none;
     display: flex;
@@ -7,10 +7,59 @@
     justify-content: space-between;
 
     &__item {
-        flex-basis: 20rem;
+        flex: 18rem;
+        margin-bottom: 2rem;
     }
 }
 
 .channel {
+    padding: 0 0.5em;
 
+    &__header {
+        margin-bottom: 1em;
+        line-height: 4em;
+        &:after {
+            content: " ";
+            display: table;
+            clear: both;
+        }
+    }
+
+    &__logo {
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    &__title {
+        display: inline-block;
+        margin: 0 0 0 1em;
+        vertical-align: top;
+    }
+
+    &__events {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    &__events-item {
+        margin-top: 0.4em;
+    }
+}
+
+.logo {
+    display: block;
+    height: 4em;
+}
+
+.event {
+    cursor: default;
+
+    &_past {
+        opacity: 0.5;
+    }
+
+    &__time {
+        font-weight: bold;
+    }
 }

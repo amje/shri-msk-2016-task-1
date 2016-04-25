@@ -1,17 +1,31 @@
 .weekday-picker {
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    right: 0;
     display: flex;
     justify-content: center;
     margin: 0;
     padding: 0;
     list-style: none;
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.15);
 
     &__item {
-        flex-basis: 120px;
+        flex: 8rem;
     }
 }
 
 .weekday {
     text-align: center;
+    border-bottom: 4px solid #fff;
+    background-color: #fff;
+    cursor: pointer;
+
+    &_active {
+        color: red;
+        border-color: red;
+    }
 
     &__name {
         font-size: 1.8em;

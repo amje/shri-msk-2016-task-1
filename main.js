@@ -42,10 +42,12 @@
 
         return [hh, mm].join(':');
     }
-    function emulatePastEvent(ISOString, now) {
-        var eventDate = new Date(ISOString);
+    function emulatePastEvent(start_at, end_at, now) {
+        var start = new Date(start_at);
+        var end = new Date(end_at);
+        var duration = (end - start) / 60e3;
 
-        return eventDate.getHours()*60 + eventDate.getMinutes() < now.getHours()*60 + now.getMinutes();
+        return end.getHours()*60 + end.getMinutes() <= now.getHours()*60 + now.getMinutes() && end.getHours()*60 + end.getMinutes() >= duration;
     }
     function parseData(data) {
         var result = {
@@ -55,7 +57,7 @@
                 { name: 'Ср', date: 13 },
                 { name: 'Чт', date: 14 },
                 { name: 'Пт', date: 15 },
-                { name: 'Сб', date: 16 },
+                { name: 'Сб', date: 16 , active: true},
                 { name: 'Вс', date: 17 }
             ]
         };
@@ -75,8 +77,9 @@
                     start_at_time: getTimeString(event.start_at),
                     end_at: event.end_at,
                     end_at_time: getTimeString(event.end_at),
-                    past: emulatePastEvent(event.end_at, now),
-                    name: event.name,
+                    past: emulatePastEvent(event.start_at, event.end_at, now),
+                    title: event.name,
+                    subtitle: event.subtitle,
                     description: event.description,
                     season_number: event.season_number,
                     images: event.images
